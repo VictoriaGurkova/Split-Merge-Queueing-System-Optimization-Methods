@@ -12,8 +12,8 @@ class Fragment:
 
         Fragment.__COUNT += 1
 
-    @staticmethod
-    def _reset_counter():
+    @classmethod
+    def _reset_counter(cls):
         Fragment.__COUNT = 0
 
     def __str__(self) -> str:

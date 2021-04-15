@@ -36,3 +36,7 @@ class Server:
         self.is_free = True
         self.fragment = None
         self.end_service_time = float('-inf')
+
+    @classmethod
+    def _reset_counter(cls):
+        Server.__COUNT = 0

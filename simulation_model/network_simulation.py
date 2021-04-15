@@ -98,7 +98,7 @@ class SplitMergeSystem:
 
             can_apply_policy = all_queue_not_empty and self._servers.can_any_class_occupy(self._params)
             if can_apply_policy:
-                class_id = self._selection_policy(state, self._params)
+                class_id = self._selection_policy(state)
 
             if class_id is None:
                 for i in range(len(self._params.fragments_numbers)):

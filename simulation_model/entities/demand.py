@@ -24,6 +24,6 @@ class Demand:
 
         Demand.__COUNT += 1
 
-    @staticmethod
-    def _reset_counter():
+    @classmethod
+    def _reset_counter(cls):
         Demand.__COUNT = 0
