@@ -4,7 +4,7 @@ from logs import log_event, log_lost_demand, log_leaving_demand, log_leaving_fra
 from model_properties.network_params import Params
 from states.states_functional import define_queue_state, define_servers_state, get_updated_state, \
     update_system_state, create_state, StateConfig, have_a_choice
-from policy.states_policy import StatesPolicy
+from policy.states_policy import Policy
 
 
 def arrival_handler(params: Params,
@@ -17,7 +17,7 @@ def arrival_handler(params: Params,
 
 def leaving_handler(params: Params,
                     state_config: StateConfig,
-                    states_policy: StatesPolicy,
+                    states_policy: Policy,
                     states_and_rates: defaultdict) -> None:
     log_event('LEAVING')
     _leaving_handler_for_class(params, state_config, states_policy, states_and_rates, class_id=1)
@@ -45,7 +45,7 @@ def _arrival_handler_for_class(params: Params,
 
 def _leaving_handler_for_class(params: Params,
                                state_config: StateConfig,
-                               states_policy: StatesPolicy,
+                               states_policy: Policy,
                                states_and_rates: defaultdict,
                                class_id: int) -> None:
     for index, unserved_fragments_number in \

@@ -4,13 +4,12 @@ from states.pretty_states import pretty_state
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler('app.log', 'w', 'utf-8')
+handler = logging.FileHandler('logging/logging.log', 'w', 'utf-8')
 handler.setFormatter(logging.Formatter('%(message)s'))
 logger.addHandler(handler)
 
 
 def log_network_configuration(params) -> None:
-    # TODO: расписать параметры системы
     logger.debug('Network configuration:')
     logger.debug(f'lambda 1 = {params.lambda1}')
     logger.debug(f'lambda 2 = {params.lambda2}')

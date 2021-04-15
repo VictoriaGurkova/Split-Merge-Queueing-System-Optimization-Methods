@@ -2,9 +2,9 @@ from pprint import pprint
 
 from model_properties.network_params import Params
 from network_simulation import SplitMergeSystem
-from policy.states_policy import get_policed_states, get_strategy, StatesPolicy
+from policy.selection_policy import SelectionPolicy
+from policy.states_policy import get_policed_states, get_strategy, Policy
 from progress_bar import ConsoleProgressBar
-from selection_policy import SelectionPolicy
 from states.states_generator import get_all_states
 
 if __name__ == '__main__':
@@ -16,17 +16,14 @@ if __name__ == '__main__':
 
     all_states = get_all_states(params)
     states_with_policy = get_policed_states(all_states, params)
-    print("All states where policy is possible:")
-    pprint(states_with_policy)
-
     strategies = get_strategy(states_with_policy)
-    states_policy = StatesPolicy(tuple(), states_with_policy, params)
-    states_policy.print_adjacent_states()
+
+    SelectionPolicy.set_policy(strategies[0], states_with_policy, params)
 
     bar = ConsoleProgressBar('Progress: ')
     model = SplitMergeSystem(params, bar, SelectionPolicy.random_order)
 
-    simulation_time = 100_000
+    simulation_time = 10_000
     statistics = model.run(simulation_time)
 
     print(statistics)

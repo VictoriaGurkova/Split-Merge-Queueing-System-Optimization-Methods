@@ -3,7 +3,7 @@ from pprint import pprint
 from calculations import Calculations
 from model_properties.network_params import Params
 from performance_measures import PerformanceMeasuresStorage
-from policy.states_policy import StatesPolicy, get_policed_states, get_strategy
+from policy.states_policy import Policy, get_policed_states, get_strategy
 from states.states_generator import get_all_states
 
 if __name__ == '__main__':
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     pprint(states_with_policy)
 
     strategies = get_strategy(states_with_policy)
-    states_policy = StatesPolicy(tuple(), states_with_policy, params)
+    states_policy = Policy(tuple(), states_with_policy, params)
     states_policy.print_adjacent_states()
 
     storage = PerformanceMeasuresStorage()

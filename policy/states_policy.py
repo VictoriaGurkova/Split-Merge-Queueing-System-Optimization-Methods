@@ -4,7 +4,7 @@ from model_properties.network_params import Params
 from states.states_functional import have_a_choice, get_free_servers_after_leaving
 
 
-class StatesPolicy:
+class Policy:
     def __init__(self, strategy: tuple, states_with_policy: list, params: Params):
         self.strategy: tuple = strategy
         self.states_with_policy: list = states_with_policy
