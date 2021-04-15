@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from analytical_calculations.calculations import get_free_servers_number_for_server_state
 from analytical_calculations.logs import log_arrival_in_queue, log_arrival_on_servers
 from model_properties.network_params import Params
+from states.states_generator import get_free_servers_number_for_server_state
 
 
 @dataclass

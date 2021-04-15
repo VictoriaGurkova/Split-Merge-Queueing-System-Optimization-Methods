@@ -4,7 +4,7 @@ from logs import log_event, log_lost_demand, log_leaving_demand, log_leaving_fra
 from model_properties.network_params import Params
 from states.states_functional import define_queue_state, define_servers_state, get_updated_state, \
     update_system_state, create_state, StateConfig, have_a_choice
-from states.states_policy import StatesPolicy
+from policy.states_policy import StatesPolicy
 
 
 def arrival_handler(params: Params,

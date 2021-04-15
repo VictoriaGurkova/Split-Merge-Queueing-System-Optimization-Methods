@@ -1,7 +1,7 @@
 import itertools
 
 from model_properties.network_params import Params
-from .states_functional import have_a_choice, get_free_servers_after_leaving
+from states.states_functional import have_a_choice, get_free_servers_after_leaving
 
 
 class StatesPolicy:

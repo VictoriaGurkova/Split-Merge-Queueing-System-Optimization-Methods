@@ -7,7 +7,7 @@ from handlers import arrival_handler, leaving_handler
 from logs import log_message, log_state, log_state_config
 from model_properties.network_params import Params
 from states.states_functional import get_state_config
-from states.states_policy import StatesPolicy
+from policy.states_policy import StatesPolicy
 
 
 def get_achievable_states(params: Params, states_policy: StatesPolicy, current_state: list) -> defaultdict:
