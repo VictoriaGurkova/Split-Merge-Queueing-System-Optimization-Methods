@@ -20,7 +20,7 @@ class Demand:
         self.class_id = class_id
         self.fragments_number = fragments_number
         Fragment.__COUNT = 0
-        self.fragments = [Fragment(self.id) for _ in range(fragments_number)]
+        self.fragments = [Fragment(self.id, self.class_id) for _ in range(fragments_number)]
 
         Demand.__COUNT += 1
 

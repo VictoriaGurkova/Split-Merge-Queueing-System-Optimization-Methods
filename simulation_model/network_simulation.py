@@ -59,6 +59,7 @@ class SplitMergeSystem:
             self._progress_bar.update_progress(self._times.current, simulation_time)
             log_network_state(self._times, self._servers)
 
+            print(self._get_current_state())
             if self._times.current == self._times.arrival:
                 self._demand_arrival()
                 continue
@@ -94,7 +95,8 @@ class SplitMergeSystem:
         while self._servers.can_some_class_occupy(self._params):
             class_id = None
             state = self._get_current_state()
-            all_queue_not_empty = state[0] and state[1]
+            # print(state)
+            all_queue_not_empty = state[0][0] and state[0][1]
 
             can_apply_policy = all_queue_not_empty and self._servers.can_any_class_occupy(self._params)
             if can_apply_policy:
@@ -148,10 +150,9 @@ class SplitMergeSystem:
         else:
             self._times.leaving = self._servers.get_min_end_service_time_for_demand()
 
-    def _get_current_state(self) -> list:
-        return [len(self._queues[0]),
-                len(self._queues[1]),
-                self._servers.get_number_of_free_servers()]
+    def _get_current_state(self) -> tuple:
+        return (len(self._queues[0]), len(self._queues[1])), \
+               self._servers.get_required_view_of_servers_state(self._times.current)
 
     @staticmethod
     def _define_arriving_demand_class(probability: float) -> int:

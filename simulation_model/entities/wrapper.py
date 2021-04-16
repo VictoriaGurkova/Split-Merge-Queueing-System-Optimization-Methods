@@ -106,4 +106,33 @@ class ServersWrapper:
     def check_if_possible_put_demand_on_servers(self, params: Params) -> bool:
         """The function checks if it is possible to put a demand on servers."""
         return bool([True for class_id in range(len(params.fragments_numbers))
-                    if self.can_occupy(class_id, params)])
+                     if self.can_occupy(class_id, params)])
+
+    def get_required_view_of_servers_state(self, current_time: float) -> tuple:
+        # return view state: ((a1...an), (b1...bm))
+        a, b = [], []
+        checked_fragments = []
+
+        for server in self.servers:
+            if not server.is_free and not (server.fragment.parent_id in checked_fragments):
+                if server.fragment.class_id == 0:
+                    a.append(self._get_end_service_times_for_sibling_fragments(server.fragment.parent_id,
+                                                                               checked_fragments))
+                elif server.fragment.class_id == 1:
+                    b.append(self._get_end_service_times_for_sibling_fragments(server.fragment.parent_id,
+                                                                               checked_fragments))
+        for i in a:
+            a[a.index(i)] = len([True for j in i if j >= current_time])
+
+        for i in b:
+            b[b.index(i)] = len([True for j in i if j >= current_time])
+
+        return tuple(sorted(a)), tuple(sorted(b))
+
+    def _get_end_service_times_for_sibling_fragments(self, fragment_parent_id: int, checked_fragments: list) -> list:
+        times = []
+        checked_fragments.append(fragment_parent_id)
+        for server in self.servers:
+            if not server.is_free and server.fragment.parent_id == fragment_parent_id:
+                times.append(server.end_service_time)
+        return times
