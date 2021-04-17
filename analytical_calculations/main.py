@@ -24,7 +24,7 @@ if __name__ == '__main__':
     storage = PerformanceMeasuresStorage()
     print()
 
-    for strategy in strategies:
+    for strategy in strategies[5:6]:
         states_policy.strategy = strategy
         print(strategy)
         calculations = Calculations(params)

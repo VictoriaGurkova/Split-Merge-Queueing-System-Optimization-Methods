@@ -16,12 +16,19 @@ if __name__ == '__main__':
     states_with_policy = get_policed_states(all_states, params)
     strategies = get_strategy(states_with_policy)
 
-    SelectionPolicy.set_policy(strategies[0], states_with_policy, params)
+    SelectionPolicy.set_policy((), states_with_policy, params)
+    SelectionPolicy.POLICY.print_adjacent_states()
+
+    for i in range(len(strategies)):
+        print("Стратегия номер", i, ":", strategies[i])
+    strategy_number = int(input("Какую внедрять?\n"))
+
+    SelectionPolicy.set_policy(strategies[strategy_number], states_with_policy, params)
 
     bar = ConsoleProgressBar('Progress: ')
     model = SplitMergeSystem(params, bar, SelectionPolicy.according_to_policy)
 
-    simulation_time = 100
+    simulation_time = 100_000
     statistics = model.run(simulation_time)
 
     print(statistics)

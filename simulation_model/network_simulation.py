@@ -45,6 +45,9 @@ class SplitMergeSystem:
         self._demands_in_network = []
         self._served_demands = []
 
+        self.queue_id_for_selection = None
+        self.there_is_a_choice = False
+
     def run(self, simulation_time: int) -> Statistics:
         """
 
@@ -59,7 +62,6 @@ class SplitMergeSystem:
             self._progress_bar.update_progress(self._times.current, simulation_time)
             log_network_state(self._times, self._servers)
 
-            print(self._get_current_state())
             if self._times.current == self._times.arrival:
                 self._demand_arrival()
                 continue
@@ -94,13 +96,17 @@ class SplitMergeSystem:
 
         while self._servers.can_some_class_occupy(self._params):
             class_id = None
-            state = self._get_current_state()
-            # print(state)
-            all_queue_not_empty = state[0][0] and state[0][1]
+            # state = self._get_current_state()
+            # # print(state)
+            # all_queue_not_empty = state[0][0] and state[0][1]
+            #
+            # can_apply_policy = all_queue_not_empty and self._servers.can_any_class_occupy(self._params)
+            # if can_apply_policy:
+            #     class_id = self.queue_id_for_selection
+            #     # class_id = self._selection_policy(state)
 
-            can_apply_policy = all_queue_not_empty and self._servers.can_any_class_occupy(self._params)
-            if can_apply_policy:
-                class_id = self._selection_policy(state)
+            if self.there_is_a_choice:
+                class_id = self.queue_id_for_selection
 
             if class_id is None:
                 for i in range(len(self._params.fragments_numbers)):
@@ -126,6 +132,9 @@ class SplitMergeSystem:
     def _demand_leaving(self) -> None:
         """Event describing a demand leaving the system."""
 
+        state = self._get_current_state()
+        all_queue_not_empty = state[0][0] and state[0][1]
+
         leaving_demand_id = self._servers.get_demand_id_with_min_end_service_time()
         self._servers.to_free_demand_fragments(leaving_demand_id)
         demand = None
@@ -139,6 +148,16 @@ class SplitMergeSystem:
         demand.leaving_time = self._times.current
         self._served_demands.append(demand)
         self._set_events_times()
+
+        can_apply_policy = all_queue_not_empty and self._servers.can_any_class_occupy(self._params)
+        if can_apply_policy:
+            # print(state)
+            self.queue_id_for_selection = self._selection_policy(state)
+            # print("Выбираем из очереди номер:", self.queue_id_for_selection)
+            self.there_is_a_choice = True
+        else:
+            self.there_is_a_choice = False
+            self.queue_id_for_selection = None
 
         log_leaving(demand, self._times.current)
 
