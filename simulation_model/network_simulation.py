@@ -96,14 +96,6 @@ class SplitMergeSystem:
 
         while self._servers.can_some_class_occupy(self._params):
             class_id = None
-            # state = self._get_current_state()
-            # # print(state)
-            # all_queue_not_empty = state[0][0] and state[0][1]
-            #
-            # can_apply_policy = all_queue_not_empty and self._servers.can_any_class_occupy(self._params)
-            # if can_apply_policy:
-            #     class_id = self.queue_id_for_selection
-            #     # class_id = self._selection_policy(state)
 
             if self.there_is_a_choice:
                 class_id = self.queue_id_for_selection
@@ -150,14 +142,8 @@ class SplitMergeSystem:
         self._set_events_times()
 
         can_apply_policy = all_queue_not_empty and self._servers.can_any_class_occupy(self._params)
-        if can_apply_policy:
-            # print(state)
-            self.queue_id_for_selection = self._selection_policy(state)
-            # print("Выбираем из очереди номер:", self.queue_id_for_selection)
-            self.there_is_a_choice = True
-        else:
-            self.there_is_a_choice = False
-            self.queue_id_for_selection = None
+        self._queue_id_for_selection = self._selection_policy(state) if can_apply_policy else None
+        self._there_is_a_choice = True if can_apply_policy else False
 
         log_leaving(demand, self._times.current)
 
