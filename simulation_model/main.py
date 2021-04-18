@@ -20,8 +20,8 @@ if __name__ == '__main__':
     SelectionPolicy.POLICY.print_adjacent_states()
 
     for i in range(len(strategies)):
-        print("Стратегия номер", i, ":", strategies[i])
-    strategy_number = int(input("Какую внедрять?\n"))
+        print("Strategy numbered", i, ":", strategies[i])
+    strategy_number = int(input("\nWhich strategy should you use?\nStrategy numbered = "))
 
     SelectionPolicy.set_policy(strategies[strategy_number], states_with_policy, params)
 
