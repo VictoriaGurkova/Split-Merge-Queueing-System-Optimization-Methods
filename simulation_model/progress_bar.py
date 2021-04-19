@@ -22,7 +22,7 @@ class ConsoleProgressBar(ProgressBar):
         delta_for_progress = int(100 * time / max_time) - self.current_progress
         if delta_for_progress > 0:
             self.current_progress += delta_for_progress
-            self._print(self.current_progress)
+            # self._print(self.current_progress)
 
     def _print(self, value) -> None:
         line = self.__PROGRESS_CHAR * value + self.__EMPTY_CHAR * (self.__MAX_VALUE - value)

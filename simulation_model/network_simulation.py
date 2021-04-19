@@ -145,6 +145,11 @@ class SplitMergeSystem:
         self._queue_id_for_selection = self._selection_policy(state) if can_apply_policy else None
         self._there_is_a_choice = True if can_apply_policy else False
 
+        if can_apply_policy:
+            print("State:", state)
+            print("Choose a strategy:", self._queue_id_for_selection)
+            print()
+
         log_leaving(demand, self._times.current)
 
     def _set_events_times(self) -> None:
