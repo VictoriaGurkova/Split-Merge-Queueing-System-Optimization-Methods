@@ -674,3 +674,10 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 analytical_calculations/output/generator/Q.txt
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
