@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from logs import log_event, log_lost_demand, log_leaving_demand, log_leaving_fragment
+from analytical_calculations.logs import log_event, log_lost_demand, log_leaving_demand, log_leaving_fragment
 from model_properties.network_params import Params
 from states.states_functional import define_queue_state, define_servers_state, get_updated_state, \
     update_system_state, create_state, StateConfig, have_a_choice

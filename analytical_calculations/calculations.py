@@ -1,5 +1,5 @@
 from model_properties.network_params import Params
-from performance_measures import PerformanceMeasures
+from analytical_calculations.performance_measures import PerformanceMeasures
 from states.pretty_states import pretty_state
 from states.states_generator import get_all_states
 
@@ -11,8 +11,8 @@ class Calculations:
         self.performance_measures = PerformanceMeasures()
 
     def calculate(self, states_policy) -> None:
-        from generator import get_stationary_distribution
-        from logs import log_network_configuration, log_message
+        from analytical_calculations.generator import get_stationary_distribution
+        from analytical_calculations.logs import log_network_configuration, log_message
 
         log_network_configuration(self.params)
         states = get_all_states(self.params)
@@ -23,7 +23,7 @@ class Calculations:
         self.calculate_performance_measures(distribution, states)
 
     def calculate_performance_measures(self, distribution: list, states: list) -> None:
-        from logs import log_message
+        from analytical_calculations.logs import log_message
 
         for state, state_probability in enumerate(distribution):
             log_message(f'P[{pretty_state(states[state])}] = {state_probability}')

@@ -3,8 +3,8 @@ from collections import defaultdict
 import numpy as np
 from scipy.linalg import expm
 
-from handlers import arrival_handler, leaving_handler
-from logs import log_message, log_state, log_state_config
+from analytical_calculations.handlers import arrival_handler, leaving_handler
+from analytical_calculations.logs import log_message, log_state, log_state_config
 from model_properties.network_params import Params
 from states.states_functional import get_state_config
 from policy.states_policy import Policy
@@ -34,7 +34,6 @@ def create_generator(states: list, states_policy: Policy, params: Params) -> np.
 
     for i, row in enumerate(generator):
         generator[i, i] = -sum(row)
-
     return generator
 
 
