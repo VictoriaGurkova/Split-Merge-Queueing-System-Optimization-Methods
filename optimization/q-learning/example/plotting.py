@@ -1,11 +1,12 @@
+from collections import namedtuple
+
 import matplotlib
 import numpy as np
 import pandas as pd
-from collections import namedtuple
 from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
-EpisodeStats = namedtuple("Stats",["episode_lengths", "episode_rewards"])
+EpisodeStats = namedtuple("Stats", ["episode_lengths", "episode_rewards"])
+
 
 def plot_cost_to_go_mountain_car(env, estimator, num_tiles=20):
     x = np.linspace(env.observation_space.low[0], env.observation_space.high[0], num=num_tiles)
@@ -59,10 +60,9 @@ def plot_value_function(V, title="Value Function"):
     plot_surface(X, Y, Z_ace, "{} (Usable Ace)".format(title))
 
 
-
 def plot_episode_stats(stats, smoothing_window=10, noshow=False):
     # Plot the episode length over time
-    fig1 = plt.figure(figsize=(10,5))
+    fig1 = plt.figure(figsize=(10, 5))
     plt.plot(stats.episode_lengths)
     plt.xlabel("Episode")
     plt.ylabel("Episode Length")
@@ -73,7 +73,7 @@ def plot_episode_stats(stats, smoothing_window=10, noshow=False):
         plt.show(fig1)
 
     # Plot the episode reward over time
-    fig2 = plt.figure(figsize=(10,5))
+    fig2 = plt.figure(figsize=(10, 5))
     rewards_smoothed = pd.Series(stats.episode_rewards).rolling(smoothing_window, min_periods=smoothing_window).mean()
     plt.plot(rewards_smoothed)
     plt.xlabel("Episode")
@@ -85,7 +85,7 @@ def plot_episode_stats(stats, smoothing_window=10, noshow=False):
         plt.show(fig2)
 
     # Plot time steps and episode number
-    fig3 = plt.figure(figsize=(10,5))
+    fig3 = plt.figure(figsize=(10, 5))
     plt.plot(np.cumsum(stats.episode_lengths), np.arange(len(stats.episode_lengths)))
     plt.xlabel("Time Steps")
     plt.ylabel("Episode")
