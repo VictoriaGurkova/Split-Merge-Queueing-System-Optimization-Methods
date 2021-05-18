@@ -1,9 +1,9 @@
+import numpy as np
+
+
 def get_probabilities(generator):
     n = len(generator[0])
-
-    prob = [0] * n
-    for i in range(n):
-        prob[i] = [0] * n
+    prob = np.zeros((n, n))
 
     for i in range(n):
         for j in range(n):

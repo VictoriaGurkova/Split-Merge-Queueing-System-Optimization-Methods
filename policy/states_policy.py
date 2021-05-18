@@ -18,7 +18,7 @@ class Policy:
     def print_adjacent_states(self):
         for state in self.adjacent_states.keys():
             print("\n", " " * 20, state, "\n")
-            print(" " * 10, "0", " " * 40, "1")
+            print(" " * 10, "1", " " * 40, "2")
             for i in self.adjacent_states[state]:
                 print(i, end=" " * 22)
             print("\n", "-" * 65)

@@ -12,12 +12,12 @@ def _get_reward(state: list):
     return -reward
 
 
-def get_income_matrix(rewards, Q):
-    if len(rewards) != len(Q[0]):
+def get_income_matrix(rewards, generator):
+    if len(rewards) != len(generator[0]):
         raise Exception('Length does not match')
 
     q = []
     for i in range(len(rewards)):
-        q.append(rewards[i] * (-Q[i][i] ** (-1)))
+        q.append(rewards[i] * (-generator[i][i] ** (-1)))
 
     return q

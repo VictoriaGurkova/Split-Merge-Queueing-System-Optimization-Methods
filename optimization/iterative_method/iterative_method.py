@@ -1,3 +1,4 @@
+import numpy as np
 from oct2py import octave
 
 from analytical_calculations.generator import create_generator
@@ -24,31 +25,29 @@ class IterativeMethod:
 
         p = self.get_p()
         q = self.get_q()
-        g, d = octave.iterative_method(self.states_with_policy_num, p, q)
 
-        print(g)
-        print(d)
+        state_indices = [index for index, state in enumerate(self.all_states) if state in self.states_with_policy]
+        print(state_indices)
+
+        g, d = octave.iterative_method(self.all_states_num, state_indices, p, q, nout=2)
+        stationary_strategy = list(map(int, d[0]))
+        print("Оптимальный средний доход за один шаг:", g)
+        print("Оптимальная стационарная стратегия:", stationary_strategy)
 
     def get_p(self):
-        # TODO: что за вероятности должны быть?
-        p = []
-        for strategy in self.strategies:
-            self.states_policy.strategy = strategy
-            generator = create_generator(self.all_states, self.states_policy, self.params)
-            p.append(get_probabilities(generator))
+        self.states_policy.strategy = self.strategies[0]
+        generator = create_generator(self.all_states, self.states_policy, self.params)
+        p1 = get_probabilities(generator)
 
-        return p
+        self.states_policy.strategy = self.strategies[-1]
+        generator = create_generator(self.all_states, self.states_policy, self.params)
+        p2 = get_probabilities(generator)
+
+        return np.array([p1, p2])
 
     def get_q(self):
         rewards = get_rewarded_for_states(self.all_states)
+        # для любой стратегии доход будет одинаковым
         self.states_policy.strategy = self.strategies[0]  # (0, 0, 0, 0)
         generator = create_generator(self.all_states, self.states_policy, self.params)
         return get_income_matrix(rewards, generator)
-            
-
-
-
-
-
-
-

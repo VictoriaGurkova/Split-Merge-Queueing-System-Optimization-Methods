@@ -11,11 +11,11 @@ if __name__ == '__main__':
 
     all_states = get_all_states(params)
     print(all_states)
-
     states_with_policy = get_policed_states(all_states, params)
+    print(states_with_policy)
     states_policy = Policy(tuple(), states_with_policy, params)
+    states_policy.print_adjacent_states()
 
-    # считать матрицы p для всех всех всех состояний внутри уже класса, для этого считать все Q для каждой стратегии
     iterative = IterativeMethod(all_states, states_policy, params)
     iterative.apple()
 
