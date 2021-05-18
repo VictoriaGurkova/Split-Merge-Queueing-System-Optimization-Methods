@@ -681,3 +681,5 @@ analytical_calculations/output/generator/Q.txt
 # IPython
 profile_default/
 ipython_config.py
+
+optimization/iterative_method/octave/octave-workspace

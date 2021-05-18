@@ -18,7 +18,6 @@ class SelectionPolicy:
 
     @classmethod
     def according_to_policy(cls, state: tuple):
-        # TODO: преобразовать state в tuple вида ((q1, q2), ((a1...an), (b1...bm)))
         return SelectionPolicy.POLICY.strategy[SelectionPolicy.POLICY.states_with_policy.index(state)]
 
     @staticmethod

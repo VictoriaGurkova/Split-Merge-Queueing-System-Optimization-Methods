@@ -7,7 +7,7 @@ from policy.states_policy import Policy, get_policed_states, get_strategy
 from states.states_generator import get_all_states
 
 if __name__ == '__main__':
-    params = Params(mu=3, lambda1=.5, lambda2=1,
+    params = Params(mu=3, lambda1=2, lambda2=1,
                     servers_number=5,
                     fragments_numbers=[2, 3],
                     queues_capacities=[1, 1])
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     storage = PerformanceMeasuresStorage()
     print()
 
-    for strategy in strategies[5:6]:
+    for strategy in strategies:
         states_policy.strategy = strategy
         print(strategy)
         calculations = Calculations(params)

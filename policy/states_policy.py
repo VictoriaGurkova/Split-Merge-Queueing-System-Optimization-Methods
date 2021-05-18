@@ -8,9 +8,12 @@ class Policy:
     def __init__(self, strategy: tuple, states_with_policy: list, params: Params):
         self.strategy: tuple = strategy
         self.states_with_policy: list = states_with_policy
+        self.states_with_policy_num: int = len(states_with_policy)
         self.params: Params = params
 
         self.adjacent_states: dict = {state: self.define_adjacent_states(state) for state in states_with_policy}
+        self.adjacent_states_num: int = len(self.adjacent_states)
+        print(self.adjacent_states)
 
     def print_adjacent_states(self):
         for state in self.adjacent_states.keys():

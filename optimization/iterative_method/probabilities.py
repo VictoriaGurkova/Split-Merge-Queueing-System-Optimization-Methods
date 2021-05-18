@@ -1,8 +1,5 @@
-from pprint import pprint
-
-
-def get_probabilities(Q):
-    n = len(Q[0])
+def get_probabilities(generator):
+    n = len(generator[0])
 
     prob = [0] * n
     for i in range(n):
@@ -10,6 +7,6 @@ def get_probabilities(Q):
 
     for i in range(n):
         for j in range(n):
-            prob[i][j] = 0 if i == j else Q[i][j] / (-Q[i][i])
+            prob[i][j] = 0 if i == j else generator[i][j] / (-generator[i][i])
 
     return prob
