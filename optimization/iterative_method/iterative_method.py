@@ -34,6 +34,12 @@ class IterativeMethod:
         print("Оптимальный средний доход за один шаг:", g)
         print("Оптимальная стационарная стратегия:", stationary_strategy)
 
+        for index, state in enumerate(self.states_with_policy):
+            if stationary_strategy[index] == 1:
+                print("После ухода из состояния", state, "брать требование из 1-ой очереди")
+            elif stationary_strategy[index] == 2:
+                print("После ухода из состояния", state, "брать требование из 2-ой очереди")
+
     def get_p(self):
         self.states_policy.strategy = self.strategies[0]
         generator = create_generator(self.all_states, self.states_policy, self.params)
@@ -50,4 +56,5 @@ class IterativeMethod:
         # для любой стратегии доход будет одинаковым
         self.states_policy.strategy = self.strategies[0]  # (0, 0, 0, 0)
         generator = create_generator(self.all_states, self.states_policy, self.params)
-        return get_income_matrix(rewards, generator)
+        q = get_income_matrix(rewards, generator)
+        return q

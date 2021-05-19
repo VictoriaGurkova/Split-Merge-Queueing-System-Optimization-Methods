@@ -13,7 +13,6 @@ class Policy:
 
         self.adjacent_states: dict = {state: self.define_adjacent_states(state) for state in states_with_policy}
         self.adjacent_states_num: int = len(self.adjacent_states)
-        print(self.adjacent_states)
 
     def print_adjacent_states(self):
         for state in self.adjacent_states.keys():
