@@ -4,7 +4,7 @@ from oct2py import octave
 from analytical_calculations.generator import create_generator
 from model_properties.network_params import Params
 from optimization.iterative_method.probabilities import get_probabilities
-from optimization.iterative_method.reward import get_rewarded_for_states, get_income_matrix
+from optimization.reward import get_rewarded_for_states, get_income_matrix
 from policy.states_policy import Policy, get_strategy
 
 

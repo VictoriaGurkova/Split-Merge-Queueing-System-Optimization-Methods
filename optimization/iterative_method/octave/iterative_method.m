@@ -13,9 +13,8 @@
 
     for i=1:length(state_indices)
         d1=[d1 1];
-%        нужно ли?
 %        в python индексация начинается с 0, в octave с 1, приводим индексы состояний с управлением к корректным
-        state_indices(i)=state_indices(i)+1
+        state_indices(i)=state_indices(i)+1;
     end
 
     w=0; % счетчик итераций
