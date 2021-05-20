@@ -22,7 +22,7 @@
     2. `TO_ACTIVATOR = a`
     
 5. Repeat:
-    1. GO TO 2
+    1. `GO TO 2`
     
 
 #### Обозначения 
@@ -43,4 +43,4 @@
 2. `for each a of ACTION(s) do`
     1. `if Q[s, a] > Q[s, amax] them amax = a`
 
-3 `return amax`
+3. `return amax`
