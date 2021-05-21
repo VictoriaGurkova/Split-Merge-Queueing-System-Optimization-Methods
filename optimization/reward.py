@@ -1,12 +1,12 @@
 def get_rewarded_for_states(states: list):
     rewards = []
     for state in states:
-        rewards.append(_get_reward(state))
+        rewards.append(get_reward(state))
 
     return rewards
 
 
-def _get_reward(state: list):
+def get_reward(state: list):
     # вознаграждение за состояние считается по количеству требований в системе
     for_first_class = state[0][0] + len(state[1][0])
     for_second_class = state[0][1] + len(state[1][1])

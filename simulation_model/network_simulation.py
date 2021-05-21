@@ -1,12 +1,12 @@
 from random import random
 
-from clock import Clock
-from entities.demand import Demand
-from entities.wrapper import ServersWrapper
-from logs import log_arrival, log_full_queue, log_service_start, log_leaving, log_network_state
 from model_properties.network_params import Params
-from network_statistics import Statistics
-from progress_bar import ProgressBar
+from simulation_model.clock import Clock
+from simulation_model.entities.demand import Demand
+from simulation_model.entities.wrapper import ServersWrapper
+from simulation_model.logs import log_arrival, log_full_queue, log_service_start, log_leaving, log_network_state
+from simulation_model.network_statistics import Statistics
+from simulation_model.progress_bar import ProgressBar
 
 
 class SplitMergeSystem:
@@ -21,7 +21,8 @@ class SplitMergeSystem:
     def __init__(self,
                  params: Params,
                  progress_bar: ProgressBar,
-                 selection_policy):
+                 selection_policy=None,
+                 simulation_time=None):
         """
 
         @param params:
@@ -29,9 +30,10 @@ class SplitMergeSystem:
         @param selection_policy:
         """
 
-        self._selection_policy = selection_policy
         self._params = params
         self._progress_bar = progress_bar
+        self._selection_policy = selection_policy
+        self._simulation_time = 1_000 if simulation_time is None else simulation_time
 
         self._times = Clock()
         # set the arrival time of the first demand
@@ -45,35 +47,39 @@ class SplitMergeSystem:
         self._demands_in_network = []
         self._served_demands = []
 
-        self.queue_id_for_selection = None
-        self.there_is_a_choice = False
+        self._queue_id_for_selection = None
+        self._there_is_a_choice = False
 
-    def run(self, simulation_time: int) -> Statistics:
+        self._statistics = Statistics(self._params.fragments_numbers)
+
+    def run(self, simulation_time: int = None) -> Statistics:
         """
 
         @param simulation_time: model simulation duration.
         """
 
-        statistics = Statistics(self._params.fragments_numbers)
+        self.set_simulation_time(simulation_time)
+        while self._times.current <= self._simulation_time:
+            self.step()
 
-        while self._times.current <= simulation_time:
-            self._times.current = min(self._times.arrival, self._times.service_start, self._times.leaving)
+        self._statistics.calculate_statistics(self._served_demands)
+        return self._statistics
 
-            self._progress_bar.update_progress(self._times.current, simulation_time)
-            log_network_state(self._times, self._servers)
+    def step(self, action=None):
+        self._times.current = min(self._times.arrival, self._times.service_start, self._times.leaving)
+        self._progress_bar.update_progress(self._times.current, self._simulation_time)
+        log_network_state(self._times, self._servers)
 
-            if self._times.current == self._times.arrival:
-                self._demand_arrival()
-                continue
-            if self._times.current == self._times.service_start:
-                self._demand_service_start()
-                continue
-            if self._times.current == self._times.leaving:
-                self._demand_leaving()
-                continue
-
-        statistics.calculate_statistics(self._served_demands)
-        return statistics
+        if self._times.current == self._times.arrival:
+            self._demand_arrival()
+            return
+        if self._times.current == self._times.service_start:
+            self._demand_service_start(action)
+            print(self._get_current_state())
+            return self._get_current_state()
+        if self._times.current == self._times.leaving:
+            self._demand_leaving()
+            return
 
     def _demand_arrival(self) -> None:
         """Event describing the arrival of a demand to the system."""
@@ -91,20 +97,23 @@ class SplitMergeSystem:
 
         self._times.update_arrival_time(self._params.total_lambda)
 
-    def _demand_service_start(self) -> None:
+    def _demand_service_start(self, action=None) -> None:
         """Event describing the start of servicing a demand."""
 
         while self._servers.can_some_class_occupy(self._params):
             class_id = None
 
-            if self.there_is_a_choice:
-                class_id = self.queue_id_for_selection
+            if self._there_is_a_choice:
+                class_id = self._queue_id_for_selection
 
             if class_id is None:
                 for i in range(len(self._params.fragments_numbers)):
                     if self._servers.can_occupy(i, self._params) and self._queues[i]:
                         class_id = i
                         break
+
+            if action is not None:
+                class_id = action
 
             if class_id is not None:
                 demand = self._queues[class_id].pop(0)
@@ -142,13 +151,9 @@ class SplitMergeSystem:
         self._set_events_times()
 
         can_apply_policy = all_queue_not_empty and self._servers.can_any_class_occupy(self._params)
-        self._queue_id_for_selection = self._selection_policy(state) if can_apply_policy else None
-        self._there_is_a_choice = True if can_apply_policy else False
-
-        if can_apply_policy:
-            print("State:", state)
-            print("Choose a strategy:", self._queue_id_for_selection)
-            print()
+        if self._selection_policy is not None:
+            self._queue_id_for_selection = self._selection_policy(state) if can_apply_policy else None
+            self._there_is_a_choice = True if can_apply_policy else False
 
         log_leaving(demand, self._times.current)
 
@@ -163,6 +168,10 @@ class SplitMergeSystem:
     def _get_current_state(self) -> tuple:
         return (len(self._queues[0]), len(self._queues[1])), \
                self._servers.get_required_view_of_servers_state(self._times.current)
+
+    def set_simulation_time(self, time):
+        if time is not None:
+            self._simulation_time = time
 
     @staticmethod
     def _define_arriving_demand_class(probability: float) -> int:

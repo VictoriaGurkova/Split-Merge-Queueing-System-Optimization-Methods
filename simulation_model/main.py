@@ -7,7 +7,7 @@ from states.states_generator import get_all_states
 
 if __name__ == '__main__':
     # this code initializes network parameters, starts statistics and performs simulation split-merge network
-    params = Params(mu=3, lambda1=.5, lambda2=1,
+    params = Params(mu=3, lambda1=1.5, lambda2=1,
                     servers_number=5,
                     fragments_numbers=[2, 3],
                     queues_capacities=[1, 1])
@@ -19,16 +19,12 @@ if __name__ == '__main__':
     SelectionPolicy.set_policy((), states_with_policy, params)
     SelectionPolicy.POLICY.print_adjacent_states()
 
-    for i in range(len(strategies)):
-        print("Strategy numbered", i, ":", strategies[i])
-    strategy_number = int(input("\nWhich strategy should you use?\nStrategy numbered = "))
-
-    SelectionPolicy.set_policy(strategies[strategy_number], states_with_policy, params)
+    SelectionPolicy.set_policy(strategies[0], states_with_policy, params)
 
     bar = ConsoleProgressBar('Progress: ')
     model = SplitMergeSystem(params, bar, SelectionPolicy.according_to_policy)
 
-    simulation_time = 100_000
+    simulation_time = 10_000
     statistics = model.run(simulation_time)
 
     print(statistics)
