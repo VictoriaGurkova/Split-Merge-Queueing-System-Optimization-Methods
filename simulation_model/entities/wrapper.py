@@ -88,7 +88,7 @@ class ServersWrapper:
                 return True
         return False
 
-    def can_any_class_occupy(self, params: Params) -> bool:
+    def can_any_class_to_occupy(self, params: Params) -> bool:
         classes_number = len(params.fragments_numbers)
         for i in range(classes_number):
             if not self.can_occupy(i, params):
