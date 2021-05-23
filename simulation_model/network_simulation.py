@@ -202,7 +202,7 @@ class SplitMergeSystem:
         old = sum(old_state[1][0]) + sum(old_state[1][1])
         new = sum(new_state[1][0]) + sum(new_state[1][1])
         free_servers_num = self._params.servers_number - (len(new_state[1][0]) + len(new_state[1][0]))
-        return -new - old - free_servers_num
+        return -(new - old) - free_servers_num
 
     def set_simulation_time(self, time):
         if time is not None:

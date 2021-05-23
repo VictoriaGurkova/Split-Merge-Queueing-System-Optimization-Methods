@@ -32,11 +32,11 @@ class QLearning:
     def learn(self, state, action, reward, next_state):
         state = str(state)
         next_state = str(next_state)
-        self.check_state_exist(next_state)
+        # self.check_state_exist(next_state)
 
         q_predict = self.q_table.loc[state, action]
 
-        q_target = reward + self.gamma * self.q_table.loc[next_state, :].max()
+        q_target = reward + self.gamma * self.q_table.loc[state, :].max()
 
         self.q_table.loc[state, action] += self.lr * (q_target - q_predict)
 
@@ -53,24 +53,13 @@ class QLearning:
                 )
             )
 
-    def print_q_table(self, all_states):
-        for i in range(len(all_states)):
-            state = str(all_states[i])
-            for j in range(len(self.q_table.index)):
-                if self.q_table.index[j] == state:
-                    self.q_table_final.loc[state, :] = self.q_table.loc[state, :]
-
+    def print_q_table(self):
         print()
-        print('Length of final Q-table =', len(self.q_table_final.index))
-        print('Final Q-table with values from the final route:')
-        print(self.q_table_final)
-
-        print()
-        print('Length of full Q-table =', len(self.q_table.index))
-        print('Full Q-table:')
+        print('Length of Q-table =', len(self.q_table.index))
+        print('Q-table:')
         print(self.q_table)
 
-    def loop(self, episodes=10):
+    def loop(self, episodes=20):
         steps = []
         costs = []
         for _ in range(episodes):
@@ -94,7 +83,7 @@ class QLearning:
                     costs += [cost]
                     break
 
-        self.print_q_table(get_all_states(self.model.get_params()))
+        self.print_q_table()
         self.plot_results(steps, costs)
 
     def is_it_possible_to_make_a_choice(self, state: list):

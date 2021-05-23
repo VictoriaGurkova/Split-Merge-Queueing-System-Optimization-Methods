@@ -27,8 +27,6 @@ if __name__ == '__main__':
     states_policy = Policy(tuple(), states_with_policy, params)
     states_policy.print_adjacent_states()
 
-    rewards = [1] * len(states)
-
     model = SplitMergeSystem(params=params, progress_bar=ConsoleProgressBar('->'), simulation_time=time)
     agent = QLearning(model, states_with_policy)
     agent.loop()
