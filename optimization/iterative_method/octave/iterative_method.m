@@ -1,28 +1,17 @@
-﻿function [g,d]=iterative_method(n,state_indices,p,q)
-
-%    данные из примера
-%    n=2; % число состояний
-%    nk=[2 2]; % вектор числа управлений в состояниях
-%    p(:,:,1)=[0.5 0.5; 0.8 0.2]; % вероятности для состояния 1
-%    p(:,:,2)=[0.4 0.6; 0.7 0.3]; % вероятности для состояния 2
-%    q(:,1)=[6;4]; % доходы для состояния 1
-%    q(:,2)=[-3;-5]; % доходы для состояния 2
-
-    nk=2; % число управлений в состояниях
-    d1=[]; % начальное решение
+﻿function [g,d]=iterative_method(n, nk, state_indices,p,q)
+    d1=[];
 
     for i=1:length(state_indices)
         d1=[d1 1];
-%        в python индексация начинается с 0, в octave с 1, приводим индексы состояний с управлением к корректным
         state_indices(i)=state_indices(i)+1;
     end
 
-    w=0; % счетчик итераций
-    flag=true; % индикатор несовпадения решений на последовательных итерациях
+    w=0;
+    flag=true;
 
-    % итерационный цикл
+    % iterative loop
     while flag==true
-        disp('Итерация ')
+        disp('Iteration ')
         w=w+1
         d=d1
 
@@ -44,7 +33,7 @@
             qd=[qd;q(i)];
         end
 
-        % решение системы линейных уравнений (определение весов)
+        % solution of a system of linear equations (determination of weights)
         v=zeros(n,1);
         g=0;
         koef1=eye(n,n)-pd;
@@ -55,7 +44,7 @@
         g=x(1);
         v(1:n-1)=x(2:n);
 
-        % улучшение решения
+        % solution improvement
         i=1;
         while i<=n
             if in_list(i,state_indices)
@@ -75,15 +64,14 @@
             i=i+1;
         end
 
-        disp('Решение на итерации')
+        disp('Solution at iteration')
         d1
 
-        % проверка совпадения решений на последовательных итерациях
         if all(d1==d)
             flag=false;
         end
 
-    end % конец итерационного цикла
+    end
 end
 
 function b=in_list(i,state_indices)

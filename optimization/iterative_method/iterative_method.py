@@ -4,7 +4,7 @@ from oct2py import octave
 from analytical_calculations.generator import create_generator
 from model_properties.network_params import Params
 from optimization.iterative_method.probabilities import get_probabilities
-from optimization.reward import get_rewarded_for_states, get_income_matrix
+from optimization.iterative_method.reward import get_rewarded_for_states, get_income_matrix
 from policy.states_policy import Policy, get_strategy
 
 
@@ -29,16 +29,17 @@ class IterativeMethod:
         state_indices = [index for index, state in enumerate(self.all_states) if state in self.states_with_policy]
         print(state_indices)
 
-        g, d = octave.iterative_method(self.all_states_num, state_indices, p, q, nout=2)
+        choice_number = len(self.params.queues_capacities)
+        g, d = octave.iterative_method(self.all_states_num, choice_number,  state_indices, p, q, nout=2)
         stationary_strategy = list(map(int, d[0]))
-        print("Оптимальный средний доход за один шаг:", g)
-        print("Оптимальная стационарная стратегия:", stationary_strategy)
+        print("Optimal average income per step:", g)
+        print("Optimal stationary strategy:", stationary_strategy)
 
         for index, state in enumerate(self.states_with_policy):
             if stationary_strategy[index] == 1:
-                print("После ухода из состояния", state, "брать требование из 1-ой очереди")
+                print("After leaving the state", state, "take a demand from the 1st queue")
             elif stationary_strategy[index] == 2:
-                print("После ухода из состояния", state, "брать требование из 2-ой очереди")
+                print("After leaving the state", state, "take a demand from the 2st queue")
 
     def get_p(self):
         self.states_policy.strategy = self.strategies[0]
@@ -53,7 +54,7 @@ class IterativeMethod:
 
     def get_q(self):
         rewards = get_rewarded_for_states(self.all_states)
-        # для любой стратегии доход будет одинаковым
+        # for any strategy, the income will be the same
         self.states_policy.strategy = self.strategies[0]  # (0, 0, 0, 0)
         generator = create_generator(self.all_states, self.states_policy, self.params)
         q = get_income_matrix(rewards, generator)

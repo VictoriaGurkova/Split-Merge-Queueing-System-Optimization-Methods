@@ -7,10 +7,9 @@ def get_rewarded_for_states(states: list):
 
 
 def get_reward(state: list):
-    # вознаграждение за состояние считается по количеству требований в системе
-    for_first_class = state[0][0] + len(state[1][0])
-    for_second_class = state[0][1] + len(state[1][1])
-    reward = for_first_class + for_second_class
+    q1, q2 = state[0][0], state[0][1]
+    servers_working_num = sum(state[1][0]) + sum(state[1][1])
+    reward = q1 + q2 + servers_working_num
     return -reward
 
 
