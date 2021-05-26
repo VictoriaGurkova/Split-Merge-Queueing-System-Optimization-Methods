@@ -10,8 +10,7 @@ from states.states_generator import get_all_states
 
 # просто штрафуем за нахождение отказ в обслуживании
 def reward_function1(old_state, new_state, time_in_state):
-    q1 = old_state[0][0]
-    q2 = old_state[0][1]
+    q1, q2 = old_state[0][0], old_state[0][1]
 
     penalty = q2 * time_in_state
     return -penalty
@@ -21,7 +20,6 @@ def reward_function2(state, new_state, time_in_state):
     q1, q2 = state[0][0], state[0][1]
 
     # за обслуживание требований каждого класса получаем доход
-    # len(state[1][0])  - число именно ТРЕБОВАНИЙ 0 класса на приборах же? если так, то все ок
     income1 = 0.5
     income2 = 0.7
     income = income1 * len(state[1][0]) + income2 * len(state[1][1])
@@ -53,7 +51,6 @@ if __name__ == '__main__':
                     fragments_numbers=[2, 3],
                     queues_capacities=[2, 2])
 
-    time = 1_000
     states = get_all_states(params)
     states_with_policy = get_policed_states(states, params)
     print("All states where policy is possible:")

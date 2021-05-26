@@ -8,7 +8,6 @@ def get_state_reward(state: list):
     q1, q2 = state[0][0], state[0][1]
 
     # за обслуживание требований каждого класса получаем доход
-    # len(state[1][0])  - число именно ТРЕБОВАНИЙ 0 класса на приборах же? если так, то все ок
     income1 = 0.5
     income2 = 0.7
     income = income1 * len(state[1][0]) + income2 * len(state[1][1])

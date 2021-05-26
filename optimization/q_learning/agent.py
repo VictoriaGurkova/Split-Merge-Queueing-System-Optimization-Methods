@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import matplotlib
 
 from policy.states_policy import get_policed_states
 from simulation_model.network_simulation import SplitMergeSystem
@@ -128,8 +126,3 @@ class QLearning:
         for state, state_qualities in zip(self._states_with_policy, self.q_table):
             policy.append(self.action_for_state(state))
         return policy
-
-    def is_it_possible_to_make_a_choice(self, state: list):
-        all_queue_not_empty = state[0][0] and state[0][1]
-        can_any_class_to_occupy_servers = self.model.can_any_class_to_occupy_servers()
-        return all_queue_not_empty and can_any_class_to_occupy_servers

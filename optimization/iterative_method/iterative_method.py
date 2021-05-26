@@ -1,5 +1,7 @@
+import math
+
 import numpy as np
-from oct2py import octave
+from scipy.linalg import solve
 
 from analytical_calculations.calculations import Calculations
 from analytical_calculations.generator import create_generator
@@ -7,9 +9,6 @@ from model_properties.network_params import Params
 from optimization.iterative_method.probabilities import get_probabilities
 from optimization.iterative_method.reward import get_rewards_for_states, get_income_matrix
 from policy.states_policy import Policy
-
-import math
-from scipy.linalg import solve
 
 
 class IterativeMethod:
