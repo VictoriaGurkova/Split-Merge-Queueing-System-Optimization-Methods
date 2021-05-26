@@ -11,3 +11,4 @@ class Clock:
 
     def update_arrival_time(self, rate) -> None:
         self.arrival += expovariate(rate)
+

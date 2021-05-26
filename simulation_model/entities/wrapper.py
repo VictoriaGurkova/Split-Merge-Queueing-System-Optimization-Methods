@@ -26,6 +26,8 @@ class ServersWrapper:
             if server.is_free and count < demand.fragments_number:
                 server.to_occupy(demand.fragments[count], current_time)
                 count += 1
+        if count != demand.fragments_number:
+            raise Exception('Incorrect number of fragments was distributed between servers')
 
     def get_number_of_free_servers(self) -> int:
         """The function returns the number of free servers."""
@@ -78,10 +80,13 @@ class ServersWrapper:
         @param demand_id: demand id which have to release servers
         """
         for server in self.servers:
-            if not server.is_free and server.fragment.parent_id == demand_id:
+            if (not server.is_free) and (server.fragment.parent_id == demand_id):
                 server.to_free()
 
     def can_some_class_occupy(self, params: Params) -> bool:
+        """
+        Check if there is a class that can occupy servers
+        """
         classes_number = len(params.fragments_numbers)
         for i in range(classes_number):
             if self.can_occupy(i, params):

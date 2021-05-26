@@ -1,16 +1,9 @@
-def get_rewarded_for_states(states: list):
+def get_rewards_for_states(states: list, reward_function_for_states):
     rewards = []
     for state in states:
-        rewards.append(get_reward(state))
+        rewards.append(reward_function_for_states(state))
 
     return rewards
-
-
-def get_reward(state: list):
-    q1, q2 = state[0][0], state[0][1]
-    servers_working_num = sum(state[1][0]) + sum(state[1][1])
-    reward = q1 + q2 + servers_working_num
-    return -reward
 
 
 def get_income_matrix(rewards, generator):
@@ -19,6 +12,6 @@ def get_income_matrix(rewards, generator):
 
     q = []
     for i in range(len(rewards)):
-        q.append(rewards[i] * (-generator[i][i] ** (-1)))
+        q.append(rewards[i] * (-1 / generator[i][i]))
 
     return q
