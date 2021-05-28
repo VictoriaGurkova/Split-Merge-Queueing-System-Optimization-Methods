@@ -33,6 +33,12 @@ class Calculations:
             self.calculate_avg_demands_on_servers(states, state, state_probability)
             self.calculate_failure_probability(states, state, state_probability)
 
+        p1 = self.params.lambda1 / self.params.total_lambda
+        p2 = self.params.lambda2 / self.params.total_lambda
+        # RANDOM demand arrives at the systems and get failed
+        self.performance_measures.failure_probability = p1 * self.performance_measures.failure_probability1 + \
+                                                        p2 * self.performance_measures.failure_probability2
+
         self.calculate_response_time()
 
     def calculate_response_time(self) -> None:
@@ -104,9 +110,9 @@ class Calculations:
         if states[state][0][1] == self.params.queues_capacities[1]:
             self.performance_measures.failure_probability2 += state_probability
 
-        if states[state][0][0] == self.params.queues_capacities[0] or \
-                states[state][0][1] == self.params.queues_capacities[1]:
-            self.performance_measures.failure_probability += state_probability
+        if (states[state][0][0] == self.params.queues_capacities[0]) and \
+                (states[state][0][1] == self.params.queues_capacities[1]):
+            self.performance_measures.blocked_all_queues_probability += state_probability
 
     def get_norm_const(self) -> float:
         class1_probability = self.params.lambda1 / (self.params.lambda1 + self.params.lambda2)

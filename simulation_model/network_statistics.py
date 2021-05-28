@@ -40,7 +40,7 @@ class ClassStatistics:
         calculate(self.demands, self.statistics)
 
     def __str__(self) -> str:
-        return f"class id: {self.class_id} -> \n\t{self.statistics}\n"
+        return f"Class-ID: {self.class_id} -> \n\t{self.statistics}\n"
 
 
 @dataclass

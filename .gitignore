@@ -683,3 +683,4 @@ profile_default/
 ipython_config.py
 
 optimization/iterative_method/octave/octave-workspace
+optimization/iterative_method/output/generator/Q.txt
