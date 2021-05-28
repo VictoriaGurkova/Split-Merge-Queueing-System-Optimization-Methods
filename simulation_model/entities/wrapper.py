@@ -26,6 +26,8 @@ class ServersWrapper:
             if server.is_free and count < demand.fragments_number:
                 server.to_occupy(demand.fragments[count], current_time)
                 count += 1
+        if count != demand.fragments_number:
+            raise Exception('Incorrect number of fragments was distributed between servers')
 
     def get_number_of_free_servers(self) -> int:
         """The function returns the number of free servers."""
@@ -78,17 +80,20 @@ class ServersWrapper:
         @param demand_id: demand id which have to release servers
         """
         for server in self.servers:
-            if not server.is_free and server.fragment.parent_id == demand_id:
+            if (not server.is_free) and (server.fragment.parent_id == demand_id):
                 server.to_free()
 
     def can_some_class_occupy(self, params: Params) -> bool:
+        """
+        Check if there is a class that can occupy servers
+        """
         classes_number = len(params.fragments_numbers)
         for i in range(classes_number):
             if self.can_occupy(i, params):
                 return True
         return False
 
-    def can_any_class_occupy(self, params: Params) -> bool:
+    def can_any_class_to_occupy(self, params: Params) -> bool:
         classes_number = len(params.fragments_numbers)
         for i in range(classes_number):
             if not self.can_occupy(i, params):
@@ -106,4 +111,33 @@ class ServersWrapper:
     def check_if_possible_put_demand_on_servers(self, params: Params) -> bool:
         """The function checks if it is possible to put a demand on servers."""
         return bool([True for class_id in range(len(params.fragments_numbers))
-                    if self.can_occupy(class_id, params)])
+                     if self.can_occupy(class_id, params)])
+
+    def get_required_view_of_servers_state(self, current_time: float) -> tuple:
+        # return view state: ((a1...an), (b1...bm))
+        a, b = [], []
+        checked_fragments = []
+
+        for server in self.servers:
+            if not server.is_free and not (server.fragment.parent_id in checked_fragments):
+                if server.fragment.class_id == 0:
+                    a.append(self._get_end_service_times_for_sibling_fragments(server.fragment.parent_id,
+                                                                               checked_fragments))
+                elif server.fragment.class_id == 1:
+                    b.append(self._get_end_service_times_for_sibling_fragments(server.fragment.parent_id,
+                                                                               checked_fragments))
+        for i in a:
+            a[a.index(i)] = len([True for j in i if j >= current_time])
+
+        for i in b:
+            b[b.index(i)] = len([True for j in i if j >= current_time])
+
+        return tuple(sorted(a)), tuple(sorted(b))
+
+    def _get_end_service_times_for_sibling_fragments(self, fragment_parent_id: int, checked_fragments: list) -> list:
+        times = []
+        checked_fragments.append(fragment_parent_id)
+        for server in self.servers:
+            if not server.is_free and server.fragment.parent_id == fragment_parent_id:
+                times.append(server.end_service_time)
+        return times

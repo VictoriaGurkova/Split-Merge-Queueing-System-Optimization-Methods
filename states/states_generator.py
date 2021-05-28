@@ -7,12 +7,12 @@ from .pretty_states import print_states, pretty_servers_state, pretty_state
 
 def get_all_states(params, do_logging=False):
 
-    servers_states = get_servers_states(params.x, params.y, params)
+    servers_states = get_all_possible_servers_states(params.x, params.y, params)
     if do_logging:
         log_message('Fragment states on servers (not including queues):')
         print_states(servers_states, pretty_servers_state)
 
-    servers_states = get_servers_states(params.x, params.y, params)
+    servers_states = get_all_possible_servers_states(params.x, params.y, params)
     states = get_all_state_with_queues(servers_states, params.queues_capacities, params)
     if do_logging:
         log_message('\nSystem states along with queues:')
@@ -21,7 +21,7 @@ def get_all_states(params, do_logging=False):
     return states
 
 
-def get_servers_states(x: int, y: int, params: Params) -> list:
+def get_all_possible_servers_states(x: int, y: int, params: Params) -> list:
     server_states = set()
     for i in range(x + 1):
         for j in range(y + 1):

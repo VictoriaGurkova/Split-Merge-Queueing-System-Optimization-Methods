@@ -3,14 +3,14 @@ from collections import defaultdict
 import numpy as np
 from scipy.linalg import expm
 
-from handlers import arrival_handler, leaving_handler
-from logs import log_message, log_state, log_state_config
+from analytical_calculations.handlers import arrival_handler, leaving_handler
+from analytical_calculations.logs import log_message, log_state, log_state_config
 from model_properties.network_params import Params
 from states.states_functional import get_state_config
-from policy.states_policy import StatesPolicy
+from policy.states_policy import Policy
 
 
-def get_achievable_states(params: Params, states_policy: StatesPolicy, current_state: list) -> defaultdict:
+def get_achievable_states(params: Params, states_policy: Policy, current_state: list) -> defaultdict:
     log_state(current_state)
     states_and_rates = defaultdict(float)
 
@@ -23,7 +23,7 @@ def get_achievable_states(params: Params, states_policy: StatesPolicy, current_s
     return states_and_rates
 
 
-def create_generator(states: list, states_policy: StatesPolicy, params: Params) -> np.ndarray:
+def create_generator(states: list, states_policy: Policy, params: Params) -> np.ndarray:
     n = len(states)
     generator = np.zeros((n, n))
     for i, current_state in enumerate(states):
@@ -34,11 +34,10 @@ def create_generator(states: list, states_policy: StatesPolicy, params: Params) 
 
     for i, row in enumerate(generator):
         generator[i, i] = -sum(row)
-
     return generator
 
 
-def get_stationary_distribution(states: list, states_policy: StatesPolicy, params: Params) -> list:
+def get_stationary_distribution(states: list, states_policy: Policy, params: Params) -> list:
     generator = create_generator(states, states_policy, params)
     log_message(f'Q = {generator}')
     np.savetxt("output/generator/Q.txt", generator, fmt='%0.0f')

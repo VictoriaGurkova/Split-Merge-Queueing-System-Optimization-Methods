@@ -4,18 +4,20 @@ from model_properties.network_params import Params
 from states.states_functional import have_a_choice, get_free_servers_after_leaving
 
 
-class StatesPolicy:
-    def __init__(self, strategy: tuple, states_with_policy: list, params: Params):
-        self.strategy: tuple = strategy
+class Policy:
+    def __init__(self, policy_vector: tuple, states_with_policy: list, params: Params):
+        self.policy_vector: tuple = policy_vector
         self.states_with_policy: list = states_with_policy
+        self.states_with_policy_num: int = len(states_with_policy)
         self.params: Params = params
 
         self.adjacent_states: dict = {state: self.define_adjacent_states(state) for state in states_with_policy}
+        self.adjacent_states_num: int = len(self.adjacent_states)
 
     def print_adjacent_states(self):
         for state in self.adjacent_states.keys():
             print("\n", " " * 20, state, "\n")
-            print(" " * 10, "0", " " * 40, "1")
+            print(" " * 10, "1", " " * 40, "2")
             for i in self.adjacent_states[state]:
                 print(i, end=" " * 22)
             print("\n", "-" * 65)
@@ -85,6 +87,9 @@ class StatesPolicy:
                 return tuple(((queues_state[0], queues_state[1] - available_demands_number_for_taking),
                               (server_state[0], (*server_state[1][1:], *taken_demands))))
 
+    def get_action_for_state(self, state: tuple):
+        return self.policy_vector[self.states_with_policy.index(state)]
+
 
 def get_policed_states(states: list, params: Params) -> list:
     max_fragments_number = max(params.fragments_numbers)
@@ -111,8 +116,8 @@ def get_policed_states(states: list, params: Params) -> list:
     return policed_states
 
 
-def get_strategy(states: list):
+def get_all_possible_policies(states: list):
     states_number = len(states)
-    strategies = list(itertools.product([0, 1], repeat=states_number))
+    strategies = itertools.product([0, 1], repeat=states_number)
 
     return strategies
