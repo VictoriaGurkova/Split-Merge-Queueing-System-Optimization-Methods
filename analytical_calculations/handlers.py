@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from logs import log_event, log_lost_demand, log_leaving_demand, log_leaving_fragment
+from analytical_calculations.logs import log_event, log_lost_demand, log_leaving_demand, log_leaving_fragment
 from model_properties.network_params import Params
 from states.states_functional import define_queue_state, define_servers_state, get_updated_state, \
     update_system_state, create_state, StateConfig, have_a_choice
@@ -54,8 +54,8 @@ def _leaving_handler_for_class(params: Params,
         if unserved_fragments_number == 1:
             state = updated_state.get_tuple_view()
             if state in states_policy.states_with_policy and have_a_choice(state, class_id - 1, params):
-                # we get the number of the queue from which we take demand, according to the strategy
-                queue_id = states_policy.strategy[states_policy.states_with_policy.index(state)]
+                # we get the number of the queue from which we take demand, according to the policy_vector
+                queue_id = states_policy.policy_vector[states_policy.states_with_policy.index(state)]
                 new_state = states_policy.adjacent_states[state][queue_id]
                 log_leaving_demand(params.mu, new_state, class_id)
                 states_and_rates[new_state] += params.mu
