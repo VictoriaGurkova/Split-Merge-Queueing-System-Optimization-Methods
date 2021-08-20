@@ -21,4 +21,3 @@ class Params:
     @property
     def y(self) -> int:
         return self.servers_number // self.fragments_numbers[1]
-

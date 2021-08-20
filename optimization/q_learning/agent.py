@@ -8,9 +8,15 @@ from states.states_generator import get_all_states
 
 
 class QLearning:
-    def __init__(self, model: SplitMergeSystem, state_with_policy: list,
-                 learning_rate=1, reward_decay=0.9, e_greedy=0.4,
-                 progress_bar: ProgressBar = None):
+    def __init__(
+        self,
+        model: SplitMergeSystem,
+        state_with_policy: list,
+        learning_rate=1,
+        reward_decay=0.9,
+        e_greedy=0.4,
+        progress_bar: ProgressBar = None,
+    ):
         self.model = model
         self.state_with_policy = state_with_policy
         self.actions = model.actions
@@ -58,12 +64,12 @@ class QLearning:
 
     def print_q_table(self):
         print()
-        print('Length of Q-table =', len(self.q_table.shape))
-        print('Q-table:')
+        print("Length of Q-table =", len(self.q_table.shape))
+        print("Q-table:")
         for state, state_qualities in zip(self._states_with_policy, self.q_table):
-            print(f'{state}: \t {state_qualities}  -> {self.action_for_state(state)}')
+            print(f"{state}: \t {state_qualities}  -> {self.action_for_state(state)}")
 
-        print('Policy:')
+        print("Policy:")
         print(self._get_current_policy())
 
     # warming_duration - percent of steps to warm up the simulation
@@ -86,7 +92,9 @@ class QLearning:
             # statistics
             times.append(self.model._times.current)
             accumulated_reward.append(accumulated_reward[-1] + reward)
-            mean_reward_per_time.append(accumulated_reward[-1] / self.model._times.current)
+            mean_reward_per_time.append(
+                accumulated_reward[-1] / self.model._times.current
+            )
 
             # print(state)
             # print(new_state)
@@ -94,32 +102,32 @@ class QLearning:
             state = new_state
 
             if step % (max_steps // 100) == 0:
-                print('')
+                print("")
                 print(self._get_current_policy())
-
-
 
         # TO SAVE AS EPS
         # plt.rcParams['text.latex.preamble'] = [r'\usepackage{mathptmx}']  # load times roman font
         # plt.rcParams['font.family'] = 'serif'  # use serif font as default
         # plt.rcParams['text.usetex'] = True  # enable LaTeX rendering globally
-        plt.style.use('seaborn-colorblind')
+        plt.style.use("seaborn-colorblind")
         plt.grid()
 
         self.print_q_table()
         plt.plot(times, accumulated_reward)
-        plt.title('Accumulated reward')
+        plt.title("Accumulated reward")
         plt.show()
-        #plt.savefig('check1.eps')
+        # plt.savefig('check1.eps')
 
         plt.clf()
         plt.grid()
         # we plot only data after some period (warming_up_period/2)
-        plt.plot(times[int(warming_duration * max_steps / 2):],
-                 mean_reward_per_time[int(warming_duration * max_steps / 2):])
-        plt.title('Mean reward per time')
+        plt.plot(
+            times[int(warming_duration * max_steps / 2) :],
+            mean_reward_per_time[int(warming_duration * max_steps / 2) :],
+        )
+        plt.title("Mean reward per time")
         plt.show()
-        #plt.savefig('check2.eps')
+        # plt.savefig('check2.eps')
 
     def _get_current_policy(self):
         policy = []

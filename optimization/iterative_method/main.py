@@ -22,23 +22,25 @@ def get_state_reward(state: list):
 
 
 def example1():
-    params = Params(mu=3, lambda1=3, lambda2=3,
-                    servers_number=6,
-                    fragments_numbers=[2, 3],
-                    queues_capacities=[2, 2])
+    params = Params(
+        mu=3,
+        lambda1=3,
+        lambda2=3,
+        servers_number=6,
+        fragments_numbers=[2, 3],
+        queues_capacities=[2, 2],
+    )
 
     all_states = get_all_states(params)
     states_with_policy = get_policed_states(all_states, params)
     states_policy = Policy(tuple(), states_with_policy, params)
     states_policy.print_adjacent_states()
 
-    iterative = IterativeMethod(all_states, states_policy,
-                                get_state_reward,
-                                params)
+    iterative = IterativeMethod(all_states, states_policy, get_state_reward, params)
     iterative.apply(print_iteration_results=True)
 
     print("executed")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     example1()

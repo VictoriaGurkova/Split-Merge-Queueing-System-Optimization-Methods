@@ -35,7 +35,7 @@ def reward_function2(state, new_state, time_in_state):
     return (income - penalty) * time_in_state
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # params = Params(mu=3, lambda1=1.5, lambda2=1,
     #                 servers_number=3,
     #                 fragments_numbers=[1, 2],
@@ -46,10 +46,14 @@ if __name__ == '__main__':
     #                 fragments_numbers=[3, 3],
     #                 queues_capacities=[2, 2])
 
-    params = Params(mu=3, lambda1=3, lambda2=3,
-                    servers_number=6,
-                    fragments_numbers=[2, 3],
-                    queues_capacities=[2, 2])
+    params = Params(
+        mu=3,
+        lambda1=3,
+        lambda2=3,
+        servers_number=6,
+        fragments_numbers=[2, 3],
+        queues_capacities=[2, 2],
+    )
 
     states = get_all_states(params)
     states_with_policy = get_policed_states(states, params)
@@ -60,11 +64,14 @@ if __name__ == '__main__':
     states_policy.print_adjacent_states()
 
     model = SplitMergeSystem(params=params, reward_policy=reward_function2)
-    agent = QLearning(model, states_with_policy,
-                      reward_decay=1,
-                      learning_rate=0.3,
-                      e_greedy=0.1,
-                      progress_bar=ConsoleProgressBar('*'))
+    agent = QLearning(
+        model,
+        states_with_policy,
+        reward_decay=1,
+        learning_rate=0.3,
+        e_greedy=0.1,
+        progress_bar=ConsoleProgressBar("*"),
+    )
 
     max_steps = 1_000_000
     agent.loop(max_steps, warming_duration=0.2)

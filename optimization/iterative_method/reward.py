@@ -8,7 +8,7 @@ def get_rewards_for_states(states: list, reward_function_for_states):
 
 def get_income_matrix(rewards, generator):
     if len(rewards) != len(generator[0]):
-        raise Exception('Length does not match')
+        raise Exception("Length does not match")
 
     q = []
     for i in range(len(rewards)):

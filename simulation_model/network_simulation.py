@@ -4,17 +4,25 @@ from model_properties.network_params import Params
 from simulation_model.clock import Clock
 from simulation_model.entities.demand import Demand
 from simulation_model.entities.wrapper import ServersWrapper
-from simulation_model.logs import log_arrival, log_full_queue, log_service_start, log_leaving, log_network_state
+from simulation_model.logs import (
+    log_arrival,
+    log_full_queue,
+    log_service_start,
+    log_leaving,
+    log_network_state,
+)
 from simulation_model.network_statistics import Statistics
 from simulation_model.progress_bar import ProgressBar
 
 
 class SplitMergeSystem:
-    def __init__(self,
-                 params: Params,
-                 progress_bar: ProgressBar = None,
-                 selection_policy=None,
-                 reward_policy=None):
+    def __init__(
+        self,
+        params: Params,
+        progress_bar: ProgressBar = None,
+        selection_policy=None,
+        reward_policy=None,
+    ):
         """
 
         @param params:
@@ -79,11 +87,15 @@ class SplitMergeSystem:
         old_time = self._times.current
         old_state = self._get_current_state()
 
-        self._times.current = min(self._times.arrival, self._times.service_start, self._times.leaving)
+        self._times.current = min(
+            self._times.arrival, self._times.service_start, self._times.leaving
+        )
         time_in_state = self._times.current - old_time
 
         if self._progress_bar:
-            self._progress_bar.update_progress(self._times.current, self._simulation_time)
+            self._progress_bar.update_progress(
+                self._times.current, self._simulation_time
+            )
         log_network_state(self._times, self._servers)
 
         if self._times.current == self._times.arrival:
@@ -93,7 +105,7 @@ class SplitMergeSystem:
         elif self._times.current == self._times.leaving:
             self._demand_leaving()
         else:
-            raise Exception('Incorrect event time')
+            raise Exception("Incorrect event time")
 
         new_state = self._get_current_state()
 
@@ -155,9 +167,9 @@ class SplitMergeSystem:
         """Event describing the arrival of a demand to the system."""
 
         class_id = self._define_arriving_demand_class()
-        demand = Demand(self._times.current,
-                        class_id,
-                        self._params.fragments_numbers[class_id])
+        demand = Demand(
+            self._times.current, class_id, self._params.fragments_numbers[class_id]
+        )
 
         if not self._queue_is_full(class_id):
             self._times.service_start = self._times.current
@@ -179,10 +191,17 @@ class SplitMergeSystem:
 
             # here we try to use the policy or an external action if it is possible
             if self._there_was_a_choice_before_leaving:
-                potential_class_id = action if action is not None else self._next_queue_id_for_selection_by_selection_policy
+                potential_class_id = (
+                    action
+                    if action is not None
+                    else self._next_queue_id_for_selection_by_selection_policy
+                )
                 if potential_class_id is None:
                     raise Exception("Incorrect state")
-                if self._servers.can_occupy(potential_class_id, self._params) and self._queues[potential_class_id]:
+                if (
+                    self._servers.can_occupy(potential_class_id, self._params)
+                    and self._queues[potential_class_id]
+                ):
                     class_id = potential_class_id
 
             # here we try to find any demand to service from queues in this order [queue1, queue2, ...]
@@ -206,7 +225,7 @@ class SplitMergeSystem:
         self._next_queue_id_for_selection_by_selection_policy = None
         self._state_before_leaving = None
 
-        self._times.service_start = float('inf')
+        self._times.service_start = float("inf")
 
         #  update time for demand leaving if we have taken any new demand
         if have_taken_at_least_one_demand:
@@ -232,12 +251,15 @@ class SplitMergeSystem:
         self._served_demands.append(demand)
         self._set_events_times()
 
-        can_apply_policy = all_queue_not_empty and self.can_any_class_to_occupy_servers()
+        can_apply_policy = (
+            all_queue_not_empty and self.can_any_class_to_occupy_servers()
+        )
         if can_apply_policy:
             self._there_was_a_choice_before_leaving = True
             if self._selection_policy is not None:
-                self._next_queue_id_for_selection_by_selection_policy = self._selection_policy(
-                    self._state_before_leaving)
+                self._next_queue_id_for_selection_by_selection_policy = (
+                    self._selection_policy(self._state_before_leaving)
+                )
                 # otherwise it means we have external actions
         else:
             self._next_queue_id_for_selection_by_selection_policy = None
@@ -252,13 +274,15 @@ class SplitMergeSystem:
         if self._servers.check_if_possible_put_demand_on_servers(self._params):
             self._times.service_start = self._times.current
         if not self._servers.get_demands_ids_on_servers():
-            self._times.leaving = float('inf')
+            self._times.leaving = float("inf")
         else:
             self._times.leaving = self._servers.get_min_end_service_time_for_demand()
 
     def _get_current_state(self) -> tuple:
-        return (len(self._queues[0]), len(self._queues[1])), \
-               self._servers.get_required_view_of_servers_state(self._times.current)
+        return (
+            len(self._queues[0]),
+            len(self._queues[1]),
+        ), self._servers.get_required_view_of_servers_state(self._times.current)
 
     def set_simulation_time(self, time):
         if time is not None:

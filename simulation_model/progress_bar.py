@@ -15,8 +15,8 @@ class ProgressBar:
 
 class ConsoleProgressBar(ProgressBar):
 
-    __PROGRESS_CHAR = '▓'
-    __EMPTY_CHAR = '░'
+    __PROGRESS_CHAR = "▓"
+    __EMPTY_CHAR = "░"
     __MAX_VALUE = 100
 
     def __init__(self, description: str, current_progress: int = 0) -> None:
@@ -33,7 +33,8 @@ class ConsoleProgressBar(ProgressBar):
     def reset(self):
         self.__init__(self.description)
 
-
     def _print(self, value) -> None:
-        line = self.__PROGRESS_CHAR * value + self.__EMPTY_CHAR * (self.__MAX_VALUE - value)
-        print('\r' + line, end='')
+        line = self.__PROGRESS_CHAR * value + self.__EMPTY_CHAR * (
+            self.__MAX_VALUE - value
+        )
+        print("\r" + line, end="")

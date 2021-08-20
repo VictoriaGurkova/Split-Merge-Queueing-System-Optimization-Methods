@@ -2,12 +2,13 @@ from dataclasses import dataclass
 
 
 class Statistics:
-
     def __init__(self, fragments_numbers: list) -> None:
         self.classes_number = len(fragments_numbers)
         self.responses = []
         self.total_statistics = StatisticalFields()
-        self.class_statistics = [ClassStatistics(class_id) for class_id in range(len(fragments_numbers))]
+        self.class_statistics = [
+            ClassStatistics(class_id) for class_id in range(len(fragments_numbers))
+        ]
 
     def calculate_statistics(self, demands: list) -> None:
         self._calculate_total_statistics(demands)
@@ -28,14 +29,15 @@ class Statistics:
 
 
 class ClassStatistics:
-
     def __init__(self, class_id: int) -> None:
         self.class_id = class_id
         self.demands = None
         self.statistics = StatisticalFields()
 
     def calculate_class_statistics(self, demands: list) -> None:
-        self.demands = [demand for demand in demands if demand.class_id == self.class_id]
+        self.demands = [
+            demand for demand in demands if demand.class_id == self.class_id
+        ]
         self.statistics.demands_number = len(self.demands)
         calculate(self.demands, self.statistics)
 
@@ -58,7 +60,9 @@ def calculate(demands: list, statistics: StatisticalFields) -> None:
     for demand in demands:
         statistics.avg_response_time += demand.leaving_time - demand.arrival_time
         statistics.avg_time_in_queue += demand.service_start_time - demand.arrival_time
-        statistics.avg_time_on_servers += demand.leaving_time - demand.service_start_time
+        statistics.avg_time_on_servers += (
+            demand.leaving_time - demand.service_start_time
+        )
     statistics.avg_response_time /= statistics.demands_number
     statistics.avg_time_in_queue /= statistics.demands_number
     statistics.avg_time_on_servers /= statistics.demands_number

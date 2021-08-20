@@ -27,7 +27,9 @@ class ServersWrapper:
                 server.to_occupy(demand.fragments[count], current_time)
                 count += 1
         if count != demand.fragments_number:
-            raise Exception('Incorrect number of fragments was distributed between servers')
+            raise Exception(
+                "Incorrect number of fragments was distributed between servers"
+            )
 
     def get_number_of_free_servers(self) -> int:
         """The function returns the number of free servers."""
@@ -47,13 +49,16 @@ class ServersWrapper:
     def get_fragments_service_durations(self) -> list:
         """The function returns a list of lists of each demand fragments servicing durations in the network."""
         demands_on_servers = self.get_demands_ids_on_servers()
-        lists_of_fragments_service_durations = [[] for _ in range(len(demands_on_servers))]
+        lists_of_fragments_service_durations = [
+            [] for _ in range(len(demands_on_servers))
+        ]
 
         for demand_id in demands_on_servers:
             for server in self.servers:
                 if not server.is_free and server.fragment.parent_id == demand_id:
-                    lists_of_fragments_service_durations[demands_on_servers.index(demand_id)] \
-                        .append(server.end_service_time)
+                    lists_of_fragments_service_durations[
+                        demands_on_servers.index(demand_id)
+                    ].append(server.end_service_time)
 
         return lists_of_fragments_service_durations
 
@@ -110,8 +115,13 @@ class ServersWrapper:
 
     def check_if_possible_put_demand_on_servers(self, params: Params) -> bool:
         """The function checks if it is possible to put a demand on servers."""
-        return bool([True for class_id in range(len(params.fragments_numbers))
-                     if self.can_occupy(class_id, params)])
+        return bool(
+            [
+                True
+                for class_id in range(len(params.fragments_numbers))
+                if self.can_occupy(class_id, params)
+            ]
+        )
 
     def get_required_view_of_servers_state(self, current_time: float) -> tuple:
         # return view state: ((a1...an), (b1...bm))
@@ -119,13 +129,21 @@ class ServersWrapper:
         checked_fragments = []
 
         for server in self.servers:
-            if not server.is_free and not (server.fragment.parent_id in checked_fragments):
+            if not server.is_free and not (
+                server.fragment.parent_id in checked_fragments
+            ):
                 if server.fragment.class_id == 0:
-                    a.append(self._get_end_service_times_for_sibling_fragments(server.fragment.parent_id,
-                                                                               checked_fragments))
+                    a.append(
+                        self._get_end_service_times_for_sibling_fragments(
+                            server.fragment.parent_id, checked_fragments
+                        )
+                    )
                 elif server.fragment.class_id == 1:
-                    b.append(self._get_end_service_times_for_sibling_fragments(server.fragment.parent_id,
-                                                                               checked_fragments))
+                    b.append(
+                        self._get_end_service_times_for_sibling_fragments(
+                            server.fragment.parent_id, checked_fragments
+                        )
+                    )
         for i in a:
             a[a.index(i)] = len([True for j in i if j >= current_time])
 
@@ -134,7 +152,9 @@ class ServersWrapper:
 
         return tuple(sorted(a)), tuple(sorted(b))
 
-    def _get_end_service_times_for_sibling_fragments(self, fragment_parent_id: int, checked_fragments: list) -> list:
+    def _get_end_service_times_for_sibling_fragments(
+        self, fragment_parent_id: int, checked_fragments: list
+    ) -> list:
         times = []
         checked_fragments.append(fragment_parent_id)
         for server in self.servers:

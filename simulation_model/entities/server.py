@@ -18,7 +18,7 @@ class Server:
         self.fragment = None
         self.is_free = True
         self.mu = mu
-        self.end_service_time = float('-inf')
+        self.end_service_time = float("-inf")
 
     def to_occupy(self, fragment: Fragment, current_time: float) -> None:
         """The function describes fragment placing on the server.
@@ -35,7 +35,7 @@ class Server:
 
         self.is_free = True
         self.fragment = None
-        self.end_service_time = float('-inf')
+        self.end_service_time = float("-inf")
 
     @classmethod
     def _reset_counter(cls):

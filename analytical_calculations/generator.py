@@ -6,11 +6,13 @@ from scipy.linalg import expm
 from analytical_calculations.handlers import arrival_handler, leaving_handler
 from analytical_calculations.logs import log_message, log_state, log_state_config
 from model_properties.network_params import Params
-from states.states_functional import get_state_config
 from policy.states_policy import Policy
+from states.states_functional import get_state_config
 
 
-def get_achievable_states(params: Params, states_policy: Policy, current_state: list) -> defaultdict:
+def get_achievable_states(
+    params: Params, states_policy: Policy, current_state: list
+) -> defaultdict:
     log_state(current_state)
     states_and_rates = defaultdict(float)
 
@@ -37,8 +39,10 @@ def create_generator(states: list, states_policy: Policy, params: Params) -> np.
     return generator
 
 
-def get_stationary_distribution(states: list, states_policy: Policy, params: Params) -> list:
+def get_stationary_distribution(
+    states: list, states_policy: Policy, params: Params
+) -> list:
     generator = create_generator(states, states_policy, params)
-    log_message(f'Q = {generator}')
-    np.savetxt("output/generator/Q.txt", generator, fmt='%0.0f')
+    log_message(f"Q = {generator}")
+    np.savetxt("output/generator/Q.txt", generator, fmt="%0.0f")
     return expm(generator * 100000000000)[0]

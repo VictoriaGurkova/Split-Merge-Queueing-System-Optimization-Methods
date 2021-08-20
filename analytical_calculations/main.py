@@ -8,10 +8,14 @@ from states.states_generator import get_all_states
 
 
 def example1(policy_id):
-    params = Params(mu=3, lambda1=4, lambda2=4,
-                    servers_number=5,
-                    fragments_numbers=[2, 3],
-                    queues_capacities=[3, 3])
+    params = Params(
+        mu=3,
+        lambda1=4,
+        lambda2=4,
+        servers_number=5,
+        fragments_numbers=[2, 3],
+        queues_capacities=[3, 3],
+    )
 
     all_states = get_all_states(params)
     states_with_policy = get_policed_states(all_states, params)
@@ -36,10 +40,14 @@ def example1(policy_id):
 
 
 def example5(policy_id):
-    params = Params(mu=3, lambda1=5, lambda2=5,
-                    servers_number=6,
-                    fragments_numbers=[3, 3],
-                    queues_capacities=[3, 3])
+    params = Params(
+        mu=3,
+        lambda1=5,
+        lambda2=5,
+        servers_number=6,
+        fragments_numbers=[3, 3],
+        queues_capacities=[3, 3],
+    )
 
     all_states = get_all_states(params)
     states_with_policy = get_policed_states(all_states, params)
@@ -52,7 +60,6 @@ def example5(policy_id):
         if idx == policy_id:
             break
 
-    print("Current policy:")
     policy = Policy(selected_policy_vector, states_with_policy, params)
     for state in states_with_policy:
         print(f"    state = {state}, action = {policy.get_action_for_state(state)}")
@@ -64,10 +71,14 @@ def example5(policy_id):
 
 
 def example3(queue_id):
-    params = Params(mu=3, lambda1=4, lambda2=4,
-                    servers_number=6,
-                    fragments_numbers=[3, 2],
-                    queues_capacities=[3, 3])
+    params = Params(
+        mu=3,
+        lambda1=4,
+        lambda2=4,
+        servers_number=6,
+        fragments_numbers=[3, 2],
+        queues_capacities=[3, 3],
+    )
 
     all_states = get_all_states(params)
     states_with_policy = get_policed_states(all_states, params)
@@ -86,18 +97,22 @@ def example3(queue_id):
 
 
 def example4():
-    print('See the fail_probs for example')
-    print('Take from the first queue only')
+    print("See the fail_probs for example")
+    print("Take from the first queue only")
     example3(0)
-    print('Take from the second queue only')
+    print("Take from the second queue only")
     example3(1)
 
 
 def example2():
-    params = Params(mu=3, lambda1=5, lambda2=5,
-                    servers_number=6,
-                    fragments_numbers=[3, 2],
-                    queues_capacities=[1, 1])
+    params = Params(
+        mu=3,
+        lambda1=5,
+        lambda2=5,
+        servers_number=6,
+        fragments_numbers=[3, 2],
+        queues_capacities=[1, 1],
+    )
 
     all_states = get_all_states(params)
     states_with_policy = get_policed_states(all_states, params)
@@ -128,8 +143,5 @@ def example2():
     print("executed")
 
 
-if __name__ == '__main__':
-    # example1(2**20-1)
-    # example1(1)
-
+if __name__ == "__main__":
     example4()
